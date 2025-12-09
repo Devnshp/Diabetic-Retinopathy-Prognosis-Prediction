@@ -1,4 +1,4 @@
-# 👁️ Diabetic Retinopathy Prognosis Prediction
+#  Diabetic Retinopathy Prognosis Prediction
 
 This repository provides the data and analysis for a machine learning project focused on predicting the **prognosis of diabetic retinopathy** using patient health indicators.
 
