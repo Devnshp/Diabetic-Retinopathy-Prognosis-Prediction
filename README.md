@@ -1,75 +1,62 @@
-# 💉 Diabetic Retinopathy Prognosis Prediction
+# 👁️ Diabetic Retinopathy Prognosis Prediction
 
-This repository contains the data and analysis for a machine learning project focused on **predicting the prognosis of diabetic retinopathy** using patient physiological data.
+This repository provides the data and analysis for a machine learning project focused on predicting the **prognosis of diabetic retinopathy** using patient health indicators.
 
-The core analysis is performed in a Jupyter Notebook (`Diabetes_Prediction.ipynb`), which implements a classification workflow from data preprocessing through to optimized model evaluation, prioritizing **Recall** as the key performance metric for identifying high-risk patients.
+The main objective of the project is to build an accurate classification model, with a specific focus on maximizing **Recall** to ensure high sensitivity in detecting the presence of retinopathy (reducing false negatives).
 
 ---
 
 ## 📁 Repository Contents
 
-| File Name | Description |
+| File Name | Purpose |
 | :--- | :--- |
-| `P600_pronostico_dataset.csv` | The raw dataset containing patient health indicators and the prognosis outcome. |
-| `Diabetes_Prediction.ipynb` | The Jupyter Notebook with the complete machine learning pipeline, including model training, tuning, and evaluation. |
+| `P600_pronostico_dataset.csv` | **Input Data**: Contains 6,000 patient records with physiological measurements and the final diagnosis (`prognosis`). |
+| `Diabetes_Prediction.ipynb` | **Analysis Workflow**: The Jupyter Notebook detailing the entire machine learning pipeline, from data preparation to model optimization. |
 
 ---
 
-## 💾 Dataset: `P600_pronostico_dataset.csv`
+## 📊 Data Overview: `P600_pronostico_dataset.csv`
 
-The dataset is a semi-colon (`;`) separated CSV file. It contains 6,000 entries and the following six features:
+This dataset contains crucial health metrics used to predict the risk of retinopathy.
 
-| Column Name | Description | Data Type | Example Values |
+| Feature | Description | Data Type | Role in Model |
 | :--- | :--- | :--- | :--- |
-| `ID` | Unique identifier for each patient. | `int64` | `0`, `1`, `2`... |
-| `age` | Patient's age (in years). | `float64` | `77.19`, `63.52`... |
-| `systolic_bp` | Patient's **Systolic Blood Pressure**. | `float64` | `85.28`, `99.37`... |
-| `diastolic_bp` | Patient's **Diastolic Blood Pressure**. | `float64` | `80.02`, `84.85`... |
-| `cholesterol` | Patient's **Cholesterol** level. | `float64` | `79.95`, `110.38`... |
-| `prognosis` | **Target Variable**: The predicted outcome. | `object` (String) | `retinopathy`, `no_retinopathy` |
-
-### Sample Data (`df.head()`)
-
-| ID | age | systolic\_bp | diastolic\_bp | cholesterol | prognosis |
-| :-: | :-: | :-: | :-: | :-: | :-: |
-| 0 | 77.196 | 85.289 | 80.022 | 79.957 | retinopathy |
-| 1 | 63.530 | 99.380 | 84.852 | 110.382 | retinopathy |
-| 2 | 69.004 | 111.349 | 109.851 | 100.828 | retinopathy |
-| 3 | 82.638 | 95.056 | 79.667 | 87.066 | retinopathy |
-| 4 | 78.346 | 109.155 | 90.713 | 92.512 | retinopathy |
+| `ID` | Unique patient identifier. | Integer | Index (not used for training) |
+| **`age`** | Patient's age in years. | Float | Feature |
+| **`systolic_bp`** | Systolic Blood Pressure. | Float | Feature |
+| **`diastolic_bp`** | Diastolic Blood Pressure. | Float | Feature |
+| **`cholesterol`** | Cholesterol level. | Float | Feature |
+| **`prognosis`** | **Target Variable**: The diagnostic outcome, which is either `retinopathy` or `no_retinopathy`. | String | Target |
 
 ---
 
-## 💻 Analysis: `Diabetes_Prediction.ipynb`
+## 🧠 Machine Learning Workflow: `Diabetes_Prediction.ipynb`
 
-This notebook details the machine learning approach:
+The Jupyter Notebook executes a standard yet rigorous machine learning pipeline:
 
-### 1. Preprocessing and EDA
-* Data cleaning, checking for missing values (none found).
-* **Label Encoding** of the target variable (`prognosis`).
-* **Standard Scaling** of the numerical features (`age`, `systolic_bp`, `diastolic_bp`, `cholesterol`).
-* Splitting the data into training and testing sets.
+### 1. Data Preparation
+* **Preprocessing**: Features are prepared for modeling, including **Standard Scaling** of numerical inputs and **Label Encoding** of the binary target variable (`prognosis`).
+* **Splitting**: The data is partitioned into training and testing sets to validate model performance on unseen data.
 
-### 2. Model Training and Selection
-The notebook trains and compares the performance of several popular classification algorithms:
+### 2. Model Training and Comparison
+The workflow compares multiple classification algorithms to find the best baseline predictor:
 * **Logistic Regression**
 * **Random Forest Classifier**
 * **Support Vector Classifier (SVC)**
 * **XGBoost Classifier**
 
-### 3. Hyperparameter Optimization
-* The best-performing model (inferred to be **SVC/SVM**) is selected for optimization.
-* **`GridSearchCV`** and **`StratifiedKFold`** are used to tune the model's hyperparameters (e.g., `C` and `gamma` for SVM).
-* The optimization metric is explicitly set to **`recall_score`** to ensure the model is highly effective at correctly identifying positive cases (`retinopathy`).
+### 3. Hyperparameter Optimization (Focused Tuning)
+* The best initial model (**Support Vector Machine - SVM**) is chosen for fine-tuning.
+* **`GridSearchCV`** with **`StratifiedKFold`** cross-validation is used to systematically search for the optimal hyperparameters (e.g., `C` and `class_weight`).
+* **Crucially, the scoring metric is set to `recall`**. This emphasizes the model's ability to minimize false negatives (patients with retinopathy being missed), which is critical for a medical diagnosis task.
 
 ### 4. Results and Evaluation
-The final evaluation includes:
+The final model performance is rigorously assessed using:
+* **Recall**: The primary metric, showing the proportion of actual positive cases (`retinopathy`) that were correctly identified.
+* **Accuracy, Precision, F1-Score**.
 * **Confusion Matrix** and **Classification Report**.
-* Metrics such as **Accuracy, Precision, Recall, and F1-Score**.
-* **ROC AUC Score** and **ROC Curve** visualization.
+* **ROC AUC Score** and curve analysis.
 
-The output snippet confirms the optimization process:
-
-> *...Performing hyperparameter tuning for best model: **SVM**...*
-> *...Best parameters: **{'C': 0.1, 'class_weight': 'balanced'}**...*
-> *...Optimized Model Performance: Recall (optimized): **0.8719**...*
+The tuning process achieved significant improvement in the critical metric:
+> *Best parameters for SVM: `{'C': 0.1, 'class_weight': 'balanced'}`*
+> *Optimized **Recall**: **0.8719***
